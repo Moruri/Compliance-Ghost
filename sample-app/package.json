@@ -1,0 +1,8 @@
+{
+  "name": "compliance-ghost-sample-app",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Intentionally non-compliant Node/Express app used as Compliance Ghost's demo target. DO NOT USE IN PRODUCTION.",
+  "type": "module",
+  "main": "src/server.js"
+}

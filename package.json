@@ -1,0 +1,22 @@
+{
+  "name": "compliance-ghost",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Automatically scan a GitHub repo for GDPR / HIPAA / PCI-DSS violations using IBM Bob's full repository understanding.",
+  "workspaces": [
+    "server",
+    "web",
+    "sample-app"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspaces --include-workspace-root",
+    "dev": "concurrently -k -n server,web -c cyan,magenta \"npm:dev -w server\" \"npm:dev -w web\"",
+    "dev:server": "npm run dev -w server",
+    "dev:web": "npm run dev -w web",
+    "build": "npm run build -w web",
+    "start": "npm run start -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
