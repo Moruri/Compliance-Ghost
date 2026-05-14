@@ -24,6 +24,7 @@ pnpm-debug.log*
 .DS_Store
 .idea
 .vscode
+.claude
 
 # scan workspace (cloned repos)
 server/.scans
