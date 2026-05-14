@@ -91,7 +91,6 @@ function TopBar({ view, target, onHome }) {
           <BrandMark size={28} />
           <div className="flex items-baseline gap-2">
             <span className="font-semibold text-[15px] tracking-tight">Compliance Ghost</span>
-            <span className="gh-label border-gh-border text-gh-fg-muted">Preview</span>
           </div>
         </button>
 
