@@ -23,7 +23,7 @@ export function Dashboard({ result, target, onReset }) {
   return (
     <div className="space-y-6">
       {/* GitHub repo-page style header */}
-      <div className="flex flex-wrap items-start gap-3">
+      <div id="cg-audit" className="scroll-mt-28 flex flex-wrap items-start gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <Icon.Repo className="w-5 h-5 text-gh-fg-muted shrink-0" />
           <div className="min-w-0">
@@ -39,7 +39,7 @@ export function Dashboard({ result, target, onReset }) {
                 <Icon.Sparkle className="w-3 h-3 text-gh-cp-purple" /> Bob
               </span>
             </div>
-            <div className="text-[13px] text-gh-fg-muted mt-1">
+            <div className="text-sm text-gh-fg-muted mt-1">
               {result.summary?.headline}
             </div>
           </div>
@@ -67,9 +67,11 @@ export function Dashboard({ result, target, onReset }) {
 
       <StatCards result={result} />
 
-      <DataFlowGraph result={result} onSelectViolation={(id) => setHighlightId(id)} />
+      <div id="cg-data-flow" className="scroll-mt-28">
+        <DataFlowGraph result={result} onSelectViolation={(id) => setHighlightId(id)} />
+      </div>
 
-      <section>
+      <section id="cg-findings" className="scroll-mt-28">
         <ViolationsList
           violations={result.violations}
           highlightId={highlightId}
@@ -77,7 +79,9 @@ export function Dashboard({ result, target, onReset }) {
         />
       </section>
 
-      <BobBriefing result={result} />
+      <div id="cg-reports" className="scroll-mt-28">
+        <BobBriefing result={result} />
+      </div>
     </div>
   );
 }
@@ -92,7 +96,7 @@ function BobBriefing({ result }) {
         </div>
         <span className="font-mono">analysis #1</span>
       </div>
-      <div className="px-4 py-3 text-[13px] text-gh-fg leading-relaxed">
+      <div className="px-4 py-3 text-sm text-gh-fg leading-relaxed">
         Bob reasoned over <strong className="text-gh-fg">{result.summary?.filesAnalyzed ?? '—'}</strong> source files
         (primary language: <strong className="text-gh-fg">{result.summary?.language ?? '—'}</strong>) and identified{' '}
         <strong className="text-gh-fg">

@@ -2,14 +2,14 @@
 
 > **Compliance Ghost uses IBM Bob's full-repository understanding to
 > automatically trace where your users' data goes, map it against GDPR,
-> HIPAA, and PCI-DSS, and tell you exactly what's broken — before a
+> HIPAA and PCI-DSS and tell you exactly what's broken — before a
 > regulator does.**
 
 A keyword scanner finds the string `email`. Bob follows the email through
 six functions, watches it get serialised into an analytics payload, sees
-that no consent gate fires before the third-party call, and writes the
+that no consent gate fires before the third-party call and writes the
 finding up with the file path, the line number, the broken snippet, the
-GDPR article number, and the corrected code.
+GDPR article number and the corrected code.
 
 That is the difference. And it is why this product cannot exist without
 Bob's full repository context.
@@ -43,7 +43,7 @@ cp server/.env.example server/.env
 npm run dev
 ```
 
-Then open <http://localhost:5173>, type `demo` into the repo input, and
+Then open <http://localhost:5173>, type `demo` into the repo input and
 hit **Scan repository**.
 
 ## The demo flow
@@ -62,7 +62,7 @@ hit **Scan repository**.
      violation card below.
    - A filterable violations list. Each card shows the severity badge,
      regulation tag, article, file path + line, the broken snippet
-     verbatim, a plain-English explanation, and a "View Fix" expandable
+     verbatim, a plain-English explanation and a "View Fix" expandable
      section with Bob's exact remediation code.
    - **Export audit report (PDF)** — what a company hands to an auditor.
 

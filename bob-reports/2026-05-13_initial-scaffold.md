@@ -7,12 +7,12 @@
 
 Stand up the Compliance Ghost monorepo end-to-end:
 
-- An Express backend that clones a GitHub repo, collects source files, and
+- An Express backend that clones a GitHub repo, collects source files and
   hands them to a configurable Bob HTTP endpoint.
 - A `BobClient` interface that posts `{ files, regulations, instructions }`
   and expects the structured JSON described in `server/src/lib/prompt.js`.
 - A React/Vite/Tailwind frontend with a scan input, a live SSE progress
-  screen, and a results dashboard (React Flow data-flow graph, score rings,
+  screen and a results dashboard (React Flow data-flow graph, score rings,
   violations list with remediation code, PDF export).
 - A bundled non-compliant sample app with all five baked-in violations.
 

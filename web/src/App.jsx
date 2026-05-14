@@ -60,7 +60,12 @@ export default function App() {
     <div className="min-h-screen flex flex-col">
       <TopBar view={view} target={target} onHome={onReset} />
 
-      <RepoBar view={view} target={target} onReset={onReset} />
+      <RepoBar
+        view={view}
+        target={target}
+        onReset={onReset}
+        findingsCount={result?.violations?.length ?? 0}
+      />
 
       <main className="flex-1">
         <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-6 md:py-8">
@@ -102,9 +107,6 @@ function TopBar({ view, target, onHome }) {
         </div>
 
         <div className="ml-auto flex items-center gap-2">
-          <span className="hidden md:inline-flex gh-label border-gh-border text-gh-fg-muted">
-            <Icon.Sparkle className="w-3 h-3 text-gh-cp-purple" /> Powered by Bob
-          </span>
           <ThemeToggle />
         </div>
       </div>
@@ -112,32 +114,58 @@ function TopBar({ view, target, onHome }) {
   );
 }
 
-function RepoBar({ view, target, onReset }) {
+function RepoBar({ view, target, onReset, findingsCount }) {
+  const [active, setActive] = useState('audit');
+  const isDashboard = view === 'dashboard';
+
+  useEffect(() => {
+    if (isDashboard) setActive('audit');
+  }, [isDashboard]);
+
+  const TABS = [
+    { id: 'audit',    label: 'Audit',     icon: <Icon.Shield className="w-4 h-4" />,   anchor: 'cg-audit' },
+    { id: 'flow',     label: 'Data flow', icon: <Icon.Graph className="w-4 h-4" />,    anchor: 'cg-data-flow' },
+    { id: 'findings', label: 'Findings',  icon: <Icon.Bug className="w-4 h-4" />,      anchor: 'cg-findings' },
+    { id: 'reports',  label: 'Reports',   icon: <Icon.Download className="w-4 h-4" />, anchor: 'cg-reports' },
+  ];
+
+  const goTo = (tab) => {
+    if (!isDashboard) return;
+    setActive(tab.id);
+    const el = document.getElementById(tab.anchor);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
-    <div className="border-b border-gh-border bg-gh-canvas">
+    <div className="border-b border-gh-border bg-gh-canvas/95 backdrop-blur sticky top-14 z-30">
       <div className="max-w-[1200px] mx-auto px-4 md:px-6 flex items-end gap-4 overflow-x-auto">
-        {[
-          { id: 'audit', label: 'Audit', icon: <Icon.Shield className="w-4 h-4" />, active: true },
-          { id: 'flow', label: 'Data flow', icon: <Icon.Graph className="w-4 h-4" />, active: false },
-          { id: 'findings', label: 'Findings', icon: <Icon.Bug className="w-4 h-4" />, active: false },
-          { id: 'reports', label: 'Reports', icon: <Icon.Download className="w-4 h-4" />, active: false },
-        ].map((tab) => (
-          <div
-            key={tab.id}
-            className={
-              'flex items-center gap-2 px-3 py-2.5 -mb-px border-b-2 text-sm cursor-default ' +
-              (tab.active
-                ? 'border-[#f78166] text-gh-fg font-semibold'
-                : 'border-transparent text-gh-fg-muted hover:text-gh-fg')
-            }
-          >
-            <span className="text-gh-fg-muted">{tab.icon}</span>
-            {tab.label}
-            {tab.id === 'findings' && view === 'dashboard' && (
-              <span className="gh-label border-gh-border bg-gh-subtle text-gh-fg-muted ml-1">5</span>
-            )}
-          </div>
-        ))}
+        {TABS.map((tab) => {
+          const isActive = isDashboard && active === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => goTo(tab)}
+              disabled={!isDashboard}
+              aria-current={isActive ? 'page' : undefined}
+              className={
+                'flex items-center gap-2 px-3 py-2.5 -mb-px border-b-2 text-sm whitespace-nowrap transition-colors ' +
+                (isActive
+                  ? 'border-[#f78166] text-gh-fg font-semibold'
+                  : 'border-transparent text-gh-fg-muted hover:text-gh-fg ') +
+                (isDashboard ? 'cursor-pointer' : 'cursor-default opacity-70')
+              }
+            >
+              <span className="text-gh-fg-muted">{tab.icon}</span>
+              {tab.label}
+              {tab.id === 'findings' && isDashboard && (
+                <span className="gh-label border-gh-border bg-gh-subtle text-gh-fg-muted ml-1">
+                  {findingsCount ?? 0}
+                </span>
+              )}
+            </button>
+          );
+        })}
 
         <div className="ml-auto py-2 hidden md:flex items-center gap-2 text-xs text-gh-fg-muted">
           {target && view !== 'input' ? (
@@ -193,16 +221,10 @@ function ThemeToggle() {
 function Footer() {
   return (
     <footer className="border-t border-gh-border mt-auto">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-4 flex flex-wrap items-center justify-between gap-2 text-xs text-gh-fg-muted">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-4 flex flex-wrap items-center justify-center gap-2 text-xs text-gh-fg-muted text-center">
         <div className="flex items-center gap-3">
           <BrandMark size={18} />
           <span>Compliance Ghost · powered by Bob semantic repo analysis</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="hover:text-gh-fg cursor-default">Docs</span>
-          <span className="hover:text-gh-fg cursor-default">API</span>
-          <span className="hover:text-gh-fg cursor-default">Privacy</span>
-          <span className="font-mono text-[11px]">v0.1.0</span>
         </div>
       </div>
     </footer>

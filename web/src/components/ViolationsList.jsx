@@ -36,7 +36,7 @@ export function ViolationsList({ violations, highlightId, onClearHighlight }) {
       {/* GitHub Issues-style filter bar */}
       <div className="px-3 py-2 border-b border-gh-border bg-gh-canvas-inset/40 flex flex-wrap items-center gap-2">
         <Icon.Bug className="w-4 h-4 text-gh-fg-muted" />
-        <span className="text-[13px] font-semibold text-gh-fg">
+        <span className="text-sm font-semibold text-gh-fg">
           {filtered.length} <span className="text-gh-fg-muted font-normal">open</span>
         </span>
 

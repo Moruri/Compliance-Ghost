@@ -95,7 +95,7 @@ const DETECTORS = [
           snippet: hit.snippet,
           explanation:
             'Protected Health Information (the patient diagnosis) is being printed ' +
-            'to console.log, which means it ends up in stdout, container logs, and ' +
+            'to console.log, which means it ends up in stdout, container logs and ' +
             'almost certainly your log aggregator. HIPAA 45 CFR 164.312(b) requires ' +
             'audit controls and prohibits PHI from leaking into general-purpose logs.',
           remediation: {
@@ -350,11 +350,10 @@ export function generateMockResult({ files, regulations }) {
           ? 'No regulatory violations detected in the scanned source files.'
           : `${violations.length} regulatory violation(s) detected across ${new Set(violations.map((v) => v.file)).size} file(s).`,
     },
-    scores: {
-      GDPR: scoreFor('GDPR', violations),
-      HIPAA: scoreFor('HIPAA', violations),
-      'PCI-DSS': scoreFor('PCI-DSS', violations),
-    },
+    scores: regulations.reduce((acc, reg) => {
+      acc[reg] = scoreFor(reg, violations);
+      return acc;
+    }, {}),
     personalData,
     dataFlow: {
       nodes: Array.from(nodes.values()),

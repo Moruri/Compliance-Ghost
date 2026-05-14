@@ -84,7 +84,7 @@ export function ScanProgress({ events, target }) {
           <div className="gh-section-header">
             <span className="text-gh-fg font-semibold">Run summary</span>
           </div>
-          <div className="px-3 py-3 text-[13px] space-y-2">
+          <div className="px-3 py-3 text-sm space-y-2">
             <Row k="Target" v={<span className="font-mono">{target ?? '—'}</span>} />
             <Row k="Started" v={<span className="font-mono">{fmtTime(startedAt)}</span>} />
             <Row k="Elapsed" v={<span className="font-mono">{fmtElapsed(elapsed)}</span>} />

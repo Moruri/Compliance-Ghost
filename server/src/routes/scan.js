@@ -144,9 +144,57 @@ async function runScan(id, parsed, regulations) {
     onProgress: (event) => pushEvent(id, event),
   });
 
-  setResult(id, { ...result, _meta: { regulations, filesAnalyzed: files.length, truncated, target: parsed.label } });
+  const filtered = filterResultToRegulations(result, regulations);
+  setResult(id, { ...filtered, _meta: { regulations, filesAnalyzed: files.length, truncated, target: parsed.label } });
   pushEvent(id, { stage: 'done', message: 'Scan complete.' });
 
   // Never delete the local sample-app from disk.
   if (!isLocal) await cleanupRepo(repoDir);
+}
+
+function filterResultToRegulations(result, regulations) {
+  const regSet = new Set(regulations);
+
+  const violations = (result?.violations ?? []).filter((v) => regSet.has(v.regulation));
+  const keptViolationIds = new Set(violations.map((v) => v.id));
+
+  const scores = Object.fromEntries(
+    Object.entries(result?.scores ?? {}).filter(([reg]) => regSet.has(reg)),
+  );
+
+  // Drop dataFlow edges that pointed at violations we just removed, and any
+  // nodes that are now disconnected. Keeps the graph consistent with the list.
+  const inputEdges = result?.dataFlow?.edges ?? [];
+  const edges = inputEdges.filter((e) => {
+    if (!e.violation) return true;
+    // An edge marked as a violation is only kept if its violation is still in scope.
+    return !e.dataFlowEdgeId || keptViolationIds.has(e.dataFlowEdgeId);
+  });
+  const reachableNodeIds = new Set();
+  edges.forEach((e) => {
+    reachableNodeIds.add(e.source);
+    reachableNodeIds.add(e.target);
+  });
+  const inputNodes = result?.dataFlow?.nodes ?? [];
+  const nodes = inputNodes.filter((n) => reachableNodeIds.has(n.id) || !inputEdges.some((e) => e.source === n.id || e.target === n.id));
+
+  const totalViolations = violations.length;
+  const summary = result?.summary
+    ? {
+        ...result.summary,
+        totalViolations,
+        headline:
+          totalViolations === 0
+            ? 'No regulatory violations detected for the selected regulation(s).'
+            : `${totalViolations} regulatory violation(s) detected across ${new Set(violations.map((v) => v.file)).size} file(s).`,
+      }
+    : result?.summary;
+
+  return {
+    ...result,
+    summary,
+    scores,
+    violations,
+    dataFlow: { nodes, edges },
+  };
 }

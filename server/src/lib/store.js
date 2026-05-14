@@ -1,5 +1,5 @@
 // In-memory store for scans. Proof-of-concept only — single-process, no persistence.
-// Each scan is keyed by id and holds status, progress events, and final results.
+// Each scan is keyed by id and holds status, progress events and final results.
 
 const scans = new Map();
 

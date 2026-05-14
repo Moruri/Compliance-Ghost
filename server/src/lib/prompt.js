@@ -3,7 +3,11 @@
 // This file is the single source of truth — both the real HTTP client and the
 // mock generator key off it.
 
-export const SCAN_RESULT_SCHEMA = `{
+export function buildScanResultSchema(regulations = ['GDPR', 'HIPAA', 'PCI-DSS']) {
+  const scoresBlock = regulations
+    .map((reg, i) => `    ${JSON.stringify(reg)}: number${i === 0 ? '                      // 0-100 (higher = better)' : ''}`)
+    .join(',\n');
+  return `{
   "summary": {
     "language": string,                  // primary language detected
     "filesAnalyzed": number,
@@ -12,9 +16,7 @@ export const SCAN_RESULT_SCHEMA = `{
     "headline": string                   // one-sentence elevator pitch of the findings
   },
   "scores": {
-    "GDPR": number,                      // 0-100 (higher = better)
-    "HIPAA": number,
-    "PCI-DSS": number
+${scoresBlock}
   },
   "personalData": [
     {
@@ -50,7 +52,7 @@ export const SCAN_RESULT_SCHEMA = `{
   "violations": [
     {
       "id": string,
-      "regulation": "GDPR" | "HIPAA" | "PCI-DSS",
+      "regulation": ${regulations.map((r) => JSON.stringify(r)).join(' | ')},
       "article": string,                 // e.g. "Article 28" or "164.312(a)(1)"
       "severity": "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
       "title": string,
@@ -66,6 +68,7 @@ export const SCAN_RESULT_SCHEMA = `{
     }
   ]
 }`;
+}
 
 export function buildBobPrompt({ files, regulations }) {
   const regs = regulations.join(', ');
@@ -78,17 +81,21 @@ You will receive every source file in a repository. Your task is to:
    data, credentials, behavioral identifiers) — not just by field name, but by
    tracing how values flow.
 2. Build a data-flow map of where each piece of data enters, gets transformed,
-   gets stored, and gets transmitted externally.
+   gets stored and gets transmitted externally.
 3. Compare what the code actually does against ${regs} and produce concrete
    violations with file paths, line numbers, the problematic snippet verbatim,
-   plain-English explanations, and remediation code.
-4. Score each regulation from 0 to 100 (higher = more compliant). Be honest:
-   a single CRITICAL violation should drop the score below 50.
+   plain-English explanations and remediation code.
+4. Score ONLY the regulation(s) the caller selected (${regs}). Do not include
+   scores for any other regulation. Score each from 0 to 100 (higher = more
+   compliant). Be honest: a single CRITICAL violation should drop the score
+   below 50.
+5. Report ONLY violations for the selected regulation(s). Ignore findings
+   that would belong to a regulation the caller did not select.
 
 Return ONLY a single JSON object that conforms exactly to this schema (no
 prose, no markdown fences, no comments):
 
-${SCAN_RESULT_SCHEMA}
+${buildScanResultSchema(regulations)}
 
 Guidelines:
 - Use stable, lowercase-kebab ids.

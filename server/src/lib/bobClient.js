@@ -52,7 +52,7 @@ export class BobClient {
   }
 
   async #mockAnalyze({ files, regulations, onProgress }) {
-    // Cheap, deterministic, and tuned to recognise the bundled demo app.
+    // Cheap, deterministic and tuned to recognise the bundled demo app.
     // We still report progress in a way that matches the real flow, so the
     // frontend animation looks identical in mock and real modes.
     const steps = [

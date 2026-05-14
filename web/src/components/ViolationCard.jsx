@@ -62,7 +62,7 @@ export const ViolationCard = forwardRef(function ViolationCard({ v, highlighted 
           </div>
         </div>
 
-        <p className="mt-4 text-[13px] text-gh-fg leading-relaxed">{v.explanation}</p>
+        <p className="mt-4 text-sm text-gh-fg leading-relaxed">{v.explanation}</p>
 
         <div className="mt-4 flex items-center gap-2">
           <button
@@ -83,7 +83,7 @@ export const ViolationCard = forwardRef(function ViolationCard({ v, highlighted 
             <div className="text-[11px] uppercase tracking-wider text-gh-fg-muted flex items-center gap-1.5">
               <Icon.Sparkle className="w-3 h-3 text-gh-cp-purple" /> Suggested change
             </div>
-            <p className="text-[13px] text-gh-fg mt-2">{v.remediation.summary}</p>
+            <p className="text-sm text-gh-fg mt-2">{v.remediation.summary}</p>
 
             <div className="mt-3 gh-code !p-0 overflow-hidden border-gh-success/30">
               <div className="flex items-center gap-2 px-3 py-1.5 border-b border-gh-border bg-gh-success/10 text-[11px] text-gh-success font-mono">

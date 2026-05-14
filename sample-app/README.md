@@ -16,6 +16,6 @@ realistic source material to reason about.
 | 5 | `src/reset.service.js` | GDPR / PCI-DSS | Password reset token stored in plaintext |
 
 Bob should catch all five with exact file paths, line numbers, plain-English
-explanations, and remediation code.
+explanations and remediation code.
 
 > **Do not deploy this app.** It is deliberately broken.

@@ -36,19 +36,12 @@ export function ScanInput({ onStart }) {
   return (
     <div className="grid lg:grid-cols-[1fr,340px] gap-6">
       <section className="min-w-0">
-        {/* Hero — Copilot Chat style preamble */}
-        <div className="flex items-center gap-2 mb-4 text-xs text-gh-fg-muted">
-          <Icon.Sparkle className="w-3.5 h-3.5 text-gh-cp-purple animate-sparkle" />
-          <span>Bob · semantic data-flow audit</span>
-          <span className="text-gh-fg-muted/50">·</span>
-          <span>v0.1.0</span>
-        </div>
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight leading-tight">
           Ask Bob to audit a repository for{' '}
           <span className="copilot-grad-text">regulatory compliance</span>
           <span className="text-gh-fg-muted">.</span>
         </h1>
-        <p className="mt-3 text-gh-fg-muted text-[13px] max-w-2xl leading-relaxed">
+        <p className="mt-3 text-gh-fg-muted text-sm max-w-2xl leading-relaxed">
           Bob reads every file at once and traces how personal data flows through the
           codebase &mdash; the same analysis an auditor would do, in 45 seconds.
         </p>
@@ -61,10 +54,6 @@ export function ScanInput({ onStart }) {
               <span className="text-xs text-gh-fg-muted">
                 Ask Bob &mdash; paste a public GitHub URL, or type{' '}
                 <code className="font-mono text-gh-fg">demo</code>
-              </span>
-              <span className="ml-auto gh-label border-gh-border text-gh-fg-muted">
-                <kbd className="font-mono text-[10px]">↵</kbd>
-                <span className="text-[10px]">to run</span>
               </span>
             </div>
 
@@ -88,7 +77,7 @@ export function ScanInput({ onStart }) {
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
-                className="flex-1 bg-transparent outline-none font-mono text-[13px] leading-relaxed text-gh-fg placeholder:text-gh-fg-subtle"
+                className="flex-1 bg-transparent outline-none font-mono text-sm leading-relaxed text-gh-fg placeholder:text-gh-fg-subtle"
               />
               {repoUrl && (
                 <button
@@ -102,8 +91,8 @@ export function ScanInput({ onStart }) {
               )}
             </div>
 
-            <div className="flex items-center gap-2 px-3 py-2 border-t border-gh-border bg-gh-canvas-inset/40">
-              <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-2 px-3 py-2 border-t border-gh-border bg-gh-canvas-inset/40">
+              <div className="flex flex-wrap items-center gap-1.5">
                 {REGULATIONS.map((r) => {
                   const on = picked.includes(r.id);
                   return (
@@ -180,7 +169,7 @@ export function ScanInput({ onStart }) {
                 </div>
                 <div className="min-w-0">
                   <div className="text-sm font-semibold text-gh-fg">{s.title}</div>
-                  <div className="text-[13px] text-gh-fg-muted mt-0.5 leading-relaxed">{s.body}</div>
+                  <div className="text-sm text-gh-fg-muted mt-0.5 leading-relaxed">{s.body}</div>
                 </div>
               </div>
             ))}
@@ -195,7 +184,7 @@ export function ScanInput({ onStart }) {
             <span className="text-gh-fg font-semibold">About</span>
           </div>
           <div className="px-4 py-3 space-y-3">
-            <p className="text-[13px] text-gh-fg-muted leading-relaxed">
+            <p className="text-sm text-gh-fg-muted leading-relaxed">
               Compliance Ghost uses Bob&rsquo;s full repository understanding to find every
               GDPR / HIPAA / PCI-DSS violation in source &mdash; before a regulator does.
             </p>
@@ -213,7 +202,7 @@ export function ScanInput({ onStart }) {
           <div className="gh-section-header">
             <span className="text-gh-fg font-semibold">Outputs</span>
           </div>
-          <ul className="px-4 py-3 space-y-2 text-[13px]">
+          <ul className="px-4 py-3 space-y-2 text-sm">
             {OUTPUTS.map((o) => (
               <li key={o} className="flex items-start gap-2 text-gh-fg">
                 <Icon.Check className="w-3.5 h-3.5 text-gh-success mt-1 shrink-0" />
@@ -227,7 +216,7 @@ export function ScanInput({ onStart }) {
           <div className="gh-section-header">
             <span className="text-gh-fg font-semibold">Privacy</span>
           </div>
-          <p className="px-4 py-3 text-[13px] text-gh-fg-muted leading-relaxed">
+          <p className="px-4 py-3 text-sm text-gh-fg-muted leading-relaxed">
             Source files are sent to Bob for the duration of a scan only. Nothing is
             persisted; the working tree is deleted after analysis.
           </p>
@@ -243,18 +232,18 @@ const STEPS = [
     body: 'Bob recognises that `u.contact_string` is an email when it flows into a mailer, even though the name says nothing about it.',
   },
   {
-    title: 'Traces data across files, functions, and APIs',
-    body: 'Follows values through renames, transformations, queue hops, and third-party calls — the analysis a linter cannot do.',
+    title: 'Traces data across files, functions and APIs',
+    body: 'Follows values through renames, transformations, queue hops and third-party calls — the analysis a linter cannot do.',
   },
   {
     title: 'Maps each flow against the regulation',
-    body: 'Returns the file, the line, the broken code verbatim, the article number, and the corrected code.',
+    body: 'Returns the file, the line, the broken code verbatim, the article number and the corrected code.',
   },
 ];
 
 const OUTPUTS = [
   'Per-regulation compliance score (0–100)',
   'Interactive data-flow graph of every personal-data field',
-  'Violations with file, line, snippet, and Bob’s fix',
+  'Violations with file, line, snippet and Bob’s fix',
   'Exportable PDF audit report',
 ];
